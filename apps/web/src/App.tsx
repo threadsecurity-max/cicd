@@ -14,6 +14,7 @@ import { Problem } from "./components/Problem";
 import { ResearchExample } from "./components/ResearchExample";
 import { Solution } from "./components/Solution";
 import { Supported } from "./components/Supported";
+import { SuccessStories } from "./components/SuccessStories";
 import { UiProvider } from "./components/UiProvider";
 import { useUi } from "./components/useUi";
 import { WhyResearchers } from "./components/WhyResearchers";
@@ -44,6 +45,10 @@ function AppContent() {
         <main id="main" className="relative">
           <BillingPage />
         </main>
+      ) : currentPath === "/success" ? (
+        <main id="main" className="relative">
+          <SuccessStories isStandalonePage={true} />
+        </main>
       ) : currentPath === "/app" ? (
         <main id="main" className="relative">
           <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
@@ -57,6 +62,7 @@ function AppContent() {
           <Solution />
           <Detections />
           <LineByLine />
+          <SuccessStories />
           <BountyWorkflow />
           <ResearchExample />
           <WhyResearchers />

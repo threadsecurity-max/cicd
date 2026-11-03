@@ -8,6 +8,7 @@ export const nav = [
   { href: "#product", label: "Product" },
   { href: "#how-it-works", label: "How It Works" },
   { href: "#detections", label: "Detections" },
+  { href: "#success", label: "Success Stories" },
   { href: "#researchers", label: "For Researchers" },
   { href: "#pricing", label: "Pricing" },
   { href: "#docs", label: "Docs" },

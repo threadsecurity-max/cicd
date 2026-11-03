@@ -20,6 +20,8 @@ function getInitialLocationState() {
     path = "/billing";
   } else if (pathname === "/app" || searchParams.get("view") === "app") {
     path = "/app";
+  } else if (pathname === "/success" || searchParams.get("view") === "success") {
+    path = "/success";
   }
 
   const notification =
