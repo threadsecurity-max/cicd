@@ -1,27 +1,31 @@
 # ==============================================================================
 # .htaccess — Hostinger Static Hosting Configuration
 # ==============================================================================
-# Place this in the public_html root alongside the Vite build output.
-# Handles SPA routing, caching, security headers, and compression.
-# ==============================================================================
+
+# Ensure proper MIME types for ES Modules and CSS
+<IfModule mod_mime.c>
+  AddType application/javascript .js .mjs
+  AddType text/css .css
+  AddType image/svg+xml .svg
+  AddType application/json .json
+  AddType font/woff2 .woff2
+</IfModule>
 
 # Enable rewrite engine for SPA routing
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /
 
   # Force HTTPS
   RewriteCond %{HTTPS} off
-  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-  # Remove www (optional — uncomment if you prefer non-www)
-  # RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-  # RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+  # If requested resource exists as a real file or directory, serve it directly
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
 
-  # SPA Fallback: serve index.html for all non-file/non-directory requests
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+  # SPA Fallback: serve index.html for all non-file requests
+  RewriteRule ^ index.html [L]
 </IfModule>
 
 # ---------- Compression ----------
@@ -29,7 +33,7 @@
   AddOutputFilterByType DEFLATE text/html text/plain text/css
   AddOutputFilterByType DEFLATE text/javascript application/javascript application/json
   AddOutputFilterByType DEFLATE image/svg+xml application/xml
-  AddOutputFilterByType DEFLATE application/font-woff2 font/woff2
+  AddOutputFilterByType DEFLATE font/woff2 application/font-woff2
 </IfModule>
 
 # ---------- Caching ----------
@@ -37,7 +41,7 @@
   ExpiresActive On
 
   # Hashed assets from Vite (immutable, cache forever)
-  <FilesMatch "\.(js|css|woff2|woff|ttf|eot)$">
+  <FilesMatch "\.(js|mjs|css|woff2|woff|ttf|eot)$">
     ExpiresDefault "access plus 1 year"
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
@@ -48,7 +52,7 @@
     Header set Cache-Control "public, max-age=2592000"
   </FilesMatch>
 
-  # HTML — never cache (SPA entry point must always be fresh)
+  # HTML — never cache so users always get fresh updates
   <FilesMatch "\.html$">
     ExpiresDefault "access plus 0 seconds"
     Header set Cache-Control "no-cache, no-store, must-revalidate"
@@ -59,7 +63,7 @@
 # ---------- Security Headers ----------
 <IfModule mod_headers.c>
   Header set X-Content-Type-Options "nosniff"
-  Header set X-Frame-Options "DENY"
+  Header set X-Frame-Options "SAMEORIGIN"
   Header set X-XSS-Protection "1; mode=block"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
   Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
@@ -67,11 +71,3 @@
 
 # ---------- Prevent directory listing ----------
 Options -Indexes
-
-# ---------- Block sensitive files ----------
-<FilesMatch "(\.env|\.git|\.htpasswd|\.DS_Store)$">
-  <IfModule mod_authz_core.c>
-    Require all denied
-  </IfModule>
-</FilesMatch>
-
