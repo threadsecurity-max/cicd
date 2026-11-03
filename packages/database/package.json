@@ -22,11 +22,11 @@
   "dependencies": {
     "@prisma/client": "^6.4.1",
     "@signal/scanner-rules": "*",
-    "@signal/shared": "*"
+    "@signal/shared": "*",
+    "@types/node": "^24.13.3",
+    "prisma": "^6.4.1"
   },
   "devDependencies": {
-    "@types/node": "^24.13.3",
-    "prisma": "^6.4.1",
     "typescript": "~6.0.2"
   }
 }

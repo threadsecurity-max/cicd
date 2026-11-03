@@ -18,10 +18,10 @@
   },
   "dependencies": {
     "@signal/shared": "*",
+    "@types/node": "^24.13.3",
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@types/node": "^24.13.3",
     "typescript": "~6.0.2"
   }
 }
